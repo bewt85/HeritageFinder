@@ -78,5 +78,29 @@ for asset in assets:
     })
     assets.remove(asset)
 
+# The following is used to pickle the all details and check that it is only 
+# the website address which is variable length
+
+#all_details = []
+#for asset in assets:
+#  time.sleep(1)
+#  details_url = asset['url']
+#  details_page = requests.get(details_url)
+#  details_soup = BeautifulSoup(details_page.text)
+#  details_table = max(details_soup.find_all('table'), key=len)
+#  details = [('summary', asset)]
+#  for row in details_table.find_all('tr'):
+#    (rough_key, value) = map(lambda el: el.text.strip(), row.find_all('td')[1:3])
+#    if "The Inland Revenue is not responsible for" in value:
+#      break
+#    details.append((rough_key, value))
+#  all_details.append(details) 
+#
+#with open("all_details.pkl", "w") as all_details_file:
+#  pickle.dump(all_details, all_details_file)
+#keysList = lambda l: ";".join([e[0] for e in l])
+#for kl in set(map(keysList, all_details)):
+#  print kl
+
 print "%s error(s)" % len(errors)
 #print json.dumps(assets)
