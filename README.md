@@ -11,8 +11,7 @@ NB This project is not endorsed by HMRC in any way.
 
 ## TODO
 
-Download most of the data (not maps)
-Get it into Algolia
+See if we can just search in memory
 Run some searches
 Create a one page site which points to the old content
 Get it onto Heroku
