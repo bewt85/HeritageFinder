@@ -7,7 +7,7 @@ The original Heritage Finder consists of three tools which help the public find
 "privately owned heritage assets that have tax exemption".  More on this can be
 found on [HMRC's Website](http://www.hmrc.gov.uk/heritage/visit.htm).
 
-NB This project is not endorsed with HMRC in any way.
+NB This project is not endorsed by HMRC in any way.
 
 ## TODO
 
