@@ -11,10 +11,9 @@ NB This project is not endorsed by HMRC in any way.
 
 ## TODO
 
-See if we can just search in memory
-Run some searches
-Create a one page site which points to the old content
 Get it onto Heroku
+Create a one page site which points to the old content
+Improve search
 Create a flask app / static site with the data
 Update the data with Lat / Long
 Add a map
