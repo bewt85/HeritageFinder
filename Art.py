@@ -101,8 +101,8 @@ if __name__ == "__main__":
     pickle.dump((i, assets, errors), backup_file)
 
   print "%s error(s)" % len(errors)
-  with open("art_assets.json", "w") as asserts_file:
-    asserts_file.write(json.dumps(assets, sort_keys=True, indent=2, separators=(",", ": ")))
+  with open("art_assets.json", "w") as assets_file:
+    assets_file.write(json.dumps(assets, sort_keys=True, indent=2, separators=(",", ": ")))
 
   with open("art_errors.json", "w") as errors_file:
     errors_file.write(json.dumps(errors, sort_keys=True, indent=2, separators=(",", ": ")))
