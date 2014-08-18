@@ -28,13 +28,17 @@ def filter_assets(search_terms):
 
 @get('/')
 def search():
-  query = request.query.get('q')
+  query = request.query.get('q', "")
+  content_type = request.get_header('Accept', "")
   if query:
     search_terms = query.lower().split()
-    print search_terms
-    return template('index', results=filter_assets(search_terms))
+    results=filter_assets(search_terms)
   else:
-    return template('index', results=assets)
+    results=assets
+  if content_type.lower() == "application/json":
+    return {'count': len(results), 'query': query}
+  else:
+    return template('index', query=query, results=results)
   
 if __name__ == '__main__':
   load()
