@@ -11,12 +11,12 @@ NB This project is not endorsed by HMRC in any way.
 
 ## TODO
 
-Change load function to use JSON
-Load results from github on startup
-Paginate the results
-Get it onto Heroku
-Improve search
-Create a flask app / static site with the data
-Update the data with Lat / Long
-Add a map
-Add geo search
+- Change load function to use JSON
+- Load results from github on startup
+- Paginate the results
+- Get it onto Heroku
+- Improve search
+- Create a flask app / static site with the data
+- Update the data with Lat / Long
+- Add a map
+- Add geo search
