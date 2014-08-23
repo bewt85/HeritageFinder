@@ -79,12 +79,12 @@ def updateAssetDetails(asset):
 
 if __name__ == "__main__":
   (assets, errors) = getAssetSummaries()
-  with open("art_original_backup.pkl", "w") as backup_file:
+  with open("data/art_original_backup.pkl", "w") as backup_file:
     pickle.dump((0, assets, errors), backup_file)
   for (i, asset) in enumerate(assets):
     if i % 60 == 0:
       print "%s percent complete" % (100.0 * float(i) / len(assets))
-      with open("art_running_backup.pkl", "w") as backup_file:
+      with open("data/art_running_backup.pkl", "w") as backup_file:
         pickle.dump((i, assets, errors), backup_file)
     time.sleep(1)
     try:
@@ -97,12 +97,12 @@ if __name__ == "__main__":
       })
       assets.remove(asset)
 
-  with open("art_final_backup.pkl", "w") as backup_file:
+  with open("data/art_final_backup.pkl", "w") as backup_file:
     pickle.dump((i, assets, errors), backup_file)
 
   print "%s error(s)" % len(errors)
-  with open("art_assets.json", "w") as assets_file:
+  with open("data/art_assets.json", "w") as assets_file:
     assets_file.write(json.dumps(assets, sort_keys=True, indent=2, separators=(",", ": ")))
 
-  with open("art_errors.json", "w") as errors_file:
+  with open("data/art_errors.json", "w") as errors_file:
     errors_file.write(json.dumps(errors, sort_keys=True, indent=2, separators=(",", ": ")))

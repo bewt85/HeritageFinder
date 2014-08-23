@@ -94,8 +94,8 @@ if __name__ == "__main__":
       assets.remove(asset)
 
   print "%s error(s)" % len(errors)
-  with open("art_collection_assets.json", "w") as assets_file:
+  with open("data/art_collection_assets.json", "w") as assets_file:
     assets_file.write(json.dumps(assets, sort_keys=True, indent=2, separators=(",", ": ")))
 
-  with open("art_collection_errors.json", "w") as errors_file:
+  with open("data/art_collection_errors.json", "w") as errors_file:
     errors_file.write(json.dumps(errors, sort_keys=True, indent=2, separators=(",", ": ")))

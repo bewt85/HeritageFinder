@@ -95,8 +95,8 @@ if __name__ == "__main__":
       assets.remove(asset)
 
   print "%s error(s)" % len(errors)
-  with open("LBC_assets.json", "w") as asserts_file:
+  with open("data/LBC_assets.json", "w") as asserts_file:
     asserts_file.write(json.dumps(assets, sort_keys=True, indent=2, separators=(",", ": ")))
 
-  with open("LBC_errors.json", "w") as errors_file:
+  with open("data/LBC_errors.json", "w") as errors_file:
     errors_file.write(json.dumps(errors, sort_keys=True, indent=2, separators=(",", ": ")))

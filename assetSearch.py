@@ -4,16 +4,20 @@ import gevent
 from gevent import monkey; monkey.patch_all()
 
 from bottle import route, run, get, post, static_file, request, response, template
-import pickle 
+import json 
 import os
 
 assets = []
 assets_index = []
 
+asset_filenames = ['data/art_assets.json', 'data/art_collection_assets.json', 'data/LBC_assets.json']
+
 def load():
   global assets
-  with open("temp_backup.pkl") as backup_file:
-    (i, assets, errors) = pickle.load(backup_file)
+  assets = []
+  for asset_filename in asset_filenames:
+    with open(asset_filename, 'r') as asset_file:
+      assets += json.load(asset_file)
 
 def index():
   global assets_index
