@@ -11,7 +11,6 @@ NB This project is not endorsed by HMRC in any way.
 
 ## TODO
 
-- Create results table server side
 - Paginate the results
 - Get it onto Heroku
 - Improve search
