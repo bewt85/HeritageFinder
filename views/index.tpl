@@ -12,9 +12,9 @@
     </form>
     <div id="resultsCount">{{ count }} results found</div>
     <table id="resultsTable">
-      <tr><th>Description</th></tr>
-    % for result in results:
-      <tr class="asset"><td class="name"><a href="{{ result['url'] }}">{{ result['name'] }}</a></td></tr>
+      <tr><th><th><th>Description</th></tr>
+    % for i,result in enumerate(results):
+      <tr class="asset"><td>{{ i+1 }}</td><td class="name"><a href="{{ result['url'] }}">{{ result['name'] }}</a></td></tr>
     % end
     <table>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -26,8 +26,14 @@
             dataType: 'json',
             data: {'q': $("#query").val()},
             beforeSend: setHeader,
-            success: function(result) {
-              $("#resultsCount").html(result['count'] + " results found");
+            success: function(response) {
+              $("#resultsCount").html(response['count'] + " results found");
+              $("#resultsTable tr:not(:first)").remove()
+              $.each(response['results'], function(i, result) {
+                $("<tr class='asset'>").append(
+                  "<td>" + (i+1) + "</td><td class='name'><a href='" + result['url'] + "'>" + result['name'] + "</a></td>"
+                ).appendTo("#resultsTable");
+              })
             }
           });
         });

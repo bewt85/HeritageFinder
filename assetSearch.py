@@ -36,9 +36,9 @@ def search():
   else:
     results=assets
   if content_type.lower() == "application/json":
-    return {'count': len(results), 'query': query, 'results': results[:20]}
+    return {'count': len(results), 'query': query, 'results': results[:20], 'page': 1}
   else:
-    return template('index', count=len(results), query=query, results=results[:20])
+    return template('index', count=len(results), query=query, results=results[:20], page=1)
   
 if __name__ == '__main__':
   load()
