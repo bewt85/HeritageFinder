@@ -16,8 +16,12 @@
       </div>
       <div class="row">
         <form action="/" method="get" class="form-inline">
-          <input class="input-xlarge form-control" placeholder="Search" id="query" name="q" type="text" value="{{query}}"/>
-          <input value="Search" type="submit" class="btn btn-primary"/>
+          <div class="input-group input-group-lg">
+            <input class="form-control" placeholder="Search" id="query" name="q" type="text" value="{{query}}"/>
+            <span class="input-group-btn">
+              <button type="submit" class="btn btn-primary"/>Search</button>
+            </span>
+          </div>
         </form>
       </div>
       <div class="row">
