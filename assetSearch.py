@@ -43,19 +43,33 @@ def filter_assets(search_terms):
     results = filter(lambda asset_string: term in asset_string[0], results)
   return [asset[1] for asset in results]
 
-@get('/')
-def search():
-  query = request.query.get('q', "")
-  content_type = request.get_header('Accept', "")
+def search(query=""):
   if query:
     search_terms = query.lower().split()
     results=filter_assets(search_terms)
   else:
     results=assets
+  return {'count': len(results), 'query': query, 'results': results[:20], 'page': 1}
+
+@get('/')
+def root():
+  query = request.query.get('q', "")
+  content_type = request.get_header('Accept', "")
+  response = search(query)  
   if content_type.lower() == "application/json":
-    return {'count': len(results), 'query': query, 'results': results[:20], 'page': 1}
+    return response 
   else:
-    return template('index', count=len(results), query=query, results=results[:20], page=1)
+    return template('index', **response) 
+
+@get("/results")
+def results():
+  query = request.query.get('q', "")
+  content_type = request.get_header('Accept', "")
+  response = search(query)  
+  if content_type.lower() == "application/json":
+    return response 
+  else:
+    return template('results', **response) 
 
 @get('/status')
 def status():

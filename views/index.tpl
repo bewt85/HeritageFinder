@@ -25,41 +25,21 @@
         </form>
       </div>
       <div class="row">
-        <table id="resultsTable" class="table table-condensed">
-          <thead>
-            <tr><th>#</th><th id="resultsCount">{{ count }} results found</th></tr>
-          </thead>
-          </tbody>
-          % for i,result in enumerate(results):
-            <tr class="asset"><td>{{ i+1 }}</td><td class="name"><a href="{{ result['url'] }}">{{ result['name'] }}</a></td></tr>
-          % end
-          </tbody>
-        <table>
+      % include('results', count=count, results=results)
       </div>
     </div>
     <script>
       $(document).ready(function () {
         $("#query").keyup(function() {
           $.ajax({
-            url: '/',
-            dataType: 'json',
+            url: '/results',
             data: {'q': $("#query").val()},
-            beforeSend: setHeader,
             success: function(response) {
-              $("#resultsCount").html(response['count'] + " results found");
-              $("#resultsTable tbody tr").remove()
-              $.each(response['results'], function(i, result) {
-                $("<tr class='asset'>").append(
-                  "<td>" + (i+1) + "</td><td class='name'><a href='" + result['url'] + "'>" + result['name'] + "</a></td>"
-                ).appendTo("#resultsTable");
-              })
+              $("#resultsTable").html(response);
             }
           });
         });
       });
-      function setHeader(hdr) {
-        hdr.setRequestHeader('Accept', 'application/json');
-      };
     </script>
   </body>
 </html>
