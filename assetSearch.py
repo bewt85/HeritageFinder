@@ -6,18 +6,31 @@ from gevent import monkey; monkey.patch_all()
 from bottle import route, run, get, post, static_file, request, response, template
 import json 
 import os
+import requests
+import datetime
 
 assets = []
 assets_index = []
 
+asset_dowload_root = 'https://raw.githubusercontent.com/bewt85/HeritageFinder/master/'
 asset_filenames = ['data/art_assets.json', 'data/art_collection_assets.json', 'data/LBC_assets.json']
+
+load_errors = []
+load_time = ""
 
 def load():
   global assets
+  global load_errors
+  global load_time
   assets = []
+  load_errors = []
   for asset_filename in asset_filenames:
-    with open(asset_filename, 'r') as asset_file:
-      assets += json.load(asset_file)
+    try:
+      response = requests.get(asset_dowload_root + asset_filename)
+      assets += response.json()
+    except ValueError:
+      load_errors.append("Could not load '%s' from '%s'" % (asset_filename, asset_download_root))
+  load_time = datetime.datetime.now().isoformat()
 
 def index():
   global assets_index
@@ -43,7 +56,12 @@ def search():
     return {'count': len(results), 'query': query, 'results': results[:20], 'page': 1}
   else:
     return template('index', count=len(results), query=query, results=results[:20], page=1)
-  
+
+@get('/status')
+def status():
+  status = 'red' if load_errors else 'green'
+  return { 'status': status, 'errors': load_errors, 'last_loaded': load_time, 'source': asset_dowload_root }
+
 if __name__ == '__main__':
   load()
   index()
