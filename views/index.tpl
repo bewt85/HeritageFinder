@@ -10,7 +10,13 @@
       <input id="query" name="q" type="text" value="{{query}}"/>
       <input value="Search" type="submit" />
     </form>
-    <div id="results">{{len(results)}} results found</div>
+    <div id="resultsCount">{{len(results)}} results found</div>
+    <table id="resultsTable">
+      <tr><th>Description</th></tr>
+    % for result in results[:20]:
+      <tr class="asset"><td class="name"><a href="{{ result['url'] }}">{{ result['name'] }}</a></td></tr>
+    % end
+    <table>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
       $(document).ready(function () {
@@ -21,7 +27,7 @@
             data: {'q': $("#query").val()},
             beforeSend: setHeader,
             success: function(result) {
-              $("#results").html(result['count'] + " results found");
+              $("#resultsCount").html(result['count'] + " results found");
             }
           });
         });
