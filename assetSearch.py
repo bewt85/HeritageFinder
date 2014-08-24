@@ -48,21 +48,16 @@ def filter_assets(search_terms):
 
 def paginate(results, query, page, results_per_page=20):
   number_of_pages = int(math.ceil(float(len(results))/results_per_page))
-  next_page = page + 1 if page < number_of_pages - 1 else None
-  previous_page = page - 1 if page > 2 else None
-  this_page = page if page > 1 and page < number_of_pages else None
+  
+  pageInRange = lambda p: p >= 1 and p <= number_of_pages
 
-  links = []
-  links.append(('1', app.get_url('root', q=query, p=1)))
-  if previous_page:
-    links.append((page-1, app.get_url('root', q=query, p=previous_page)))
-  if this_page:
-    links.append((page, app.get_url('root', q=query, p=page)))
-  if next_page:
-    links.append((page+1, app.get_url('root', q=query, p=next_page)))
-  if number_of_pages > 1:
-    links.append((number_of_pages, app.get_url('root', q=query, p=number_of_pages)))
+  pages_to_show = [1, number_of_pages] + range(page-2,page+3)
+  pages_to_show = filter(pageInRange, pages_to_show)
+  pages_to_show = sorted(list(set(pages_to_show)))
 
+  toLink = lambda p: (p, app.get_url('root', q=query, p=p))
+  links = map(toLink, pages_to_show)
+  
   page_start = results_per_page * (page - 1)
   these_results = results[page_start:(page_start+results_per_page)]
   count = len(results)
