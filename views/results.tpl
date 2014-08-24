@@ -2,7 +2,7 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Type</th>
+              <th>Category</th>
               <th>Location</th>
               <th id="resultsCount">{{ count }} results found</th>
             </tr>
@@ -12,7 +12,7 @@
           % for i,result in enumerate(results):
             <tr class="asset">
               <td>{{ i+1+first_result }}</td>
-              <td>{{ result['type'].title() }}</td>
+              <td>{{ result['category'].title() }}</td>
               <td>{{ result['region'].title() }}</td>
               <td class="name"><a href="{{ result['url'] }}">{{ result['name'] }}</a></td>
             </tr>

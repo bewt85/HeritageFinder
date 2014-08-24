@@ -36,6 +36,12 @@ def load():
       load_errors.append("Could not load '%s' from '%s'" % (asset_filename, asset_download_root))
   load_time = datetime.datetime.now().isoformat()
 
+  def addCategory(asset):
+    asset.setdefault('category', asset['type'])
+    return asset
+
+  assets = map(addCategory, assets)
+
 def index():
   global assets_index
   assetsMap = lambda asset: "{}||{}".format(asset.get('name', ''), asset.get('description', '')).lower()
