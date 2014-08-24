@@ -3,11 +3,12 @@
 import gevent
 from gevent import monkey; monkey.patch_all()
 
-from bottle import route, run, get, post, static_file, request, response, template
+from bottle import route, run, get, post, static_file, request, response, template, default_app 
 import json 
 import os
 import requests
 import datetime
+import math
 
 assets = []
 assets_index = []
@@ -17,6 +18,8 @@ asset_filenames = ['data/art_assets.json', 'data/art_collection_assets.json', 'd
 
 load_errors = []
 load_time = ""
+
+app = default_app()
 
 def load():
   global assets
@@ -43,35 +46,67 @@ def filter_assets(search_terms):
     results = filter(lambda asset_string: term in asset_string[0], results)
   return [asset[1] for asset in results]
 
-def search(query=""):
+def paginate(results, query, page, results_per_page=20):
+  number_of_pages = int(math.ceil(float(len(results))/results_per_page))
+  next_page = page + 1 if page < number_of_pages - 1 else None
+  previous_page = page - 1 if page > 2 else None
+  this_page = page if page > 1 and page < number_of_pages else None
+
+  links = []
+  links.append(('1', app.get_url('root', q=query, p=1)))
+  if previous_page:
+    links.append((page-1, app.get_url('root', q=query, p=previous_page)))
+  if this_page:
+    links.append((page, app.get_url('root', q=query, p=page)))
+  if next_page:
+    links.append((page+1, app.get_url('root', q=query, p=next_page)))
+  if number_of_pages > 1:
+    links.append((number_of_pages, app.get_url('root', q=query, p=number_of_pages)))
+
+  page_start = results_per_page * (page - 1)
+  these_results = results[page_start:(page_start+results_per_page)]
+  count = len(results)
+  
+  return {
+    'count': count, 
+    'query': query, 
+    'results': these_results, 
+    'page': page, 
+    'number_of_pages': number_of_pages, 
+    'results_per_page': results_per_page, 
+    'links': links}
+
+def search(query="", page=1):
   if query:
     search_terms = query.lower().split()
     results=filter_assets(search_terms)
   else:
     results=assets
-  return {'count': len(results), 'query': query, 'results': results[:20], 'page': 1}
+  return paginate(results, query, page)
 
-@get('/')
+@app.get('/', name='root')
 def root():
-  query = request.query.get('q', "")
+  query = request.GET.get('q', "")
+  page = int(request.GET.get('p', 1))
   content_type = request.get_header('Accept', "")
-  response = search(query)  
+  response = search(query, page)  
   if content_type.lower() == "application/json":
     return response 
   else:
     return template('index', **response) 
 
-@get("/results")
+@app.get("/results")
 def results():
-  query = request.query.get('q', "")
+  query = request.GET.get('q', "")
+  page = int(request.GET.get('p', 1))
   content_type = request.get_header('Accept', "")
-  response = search(query)  
+  response = search(query, page)  
   if content_type.lower() == "application/json":
     return response 
   else:
     return template('results', **response) 
 
-@get('/status')
+@app.get('/status')
 def status():
   status = 'red' if load_errors else 'green'
   return { 'status': status, 'errors': load_errors, 'last_loaded': load_time, 'source': asset_dowload_root }

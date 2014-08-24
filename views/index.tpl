@@ -24,8 +24,8 @@
           </div>
         </form>
       </div>
-      <div class="row">
-      % include('results', count=count, results=results)
+      <div id="results" class="row">
+      % include('results', count=count, results=results, links=links, number_of_pages=number_of_pages)
       </div>
     </div>
     <script>
@@ -35,7 +35,7 @@
             url: '/results',
             data: {'q': $("#query").val()},
             success: function(response) {
-              $("#resultsTable").html(response);
+              $("#results").html(response);
             }
           });
         });
