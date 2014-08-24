@@ -16,6 +16,8 @@ assets_index = []
 asset_dowload_root = os.environ.get('DOWNLOAD_ROOT', 'https://raw.githubusercontent.com/bewt85/HeritageFinder/master/')
 asset_filenames = ['data/art_assets.json', 'data/art_collection_assets.json', 'data/LBC_assets.json']
 
+SUMMARY_LENGTH=140
+
 load_errors = []
 load_time = ""
 
@@ -39,6 +41,10 @@ def load():
 
   for asset in assets:
     asset.setdefault('category', asset['type'])
+    summary = asset['name']
+    if len(summary) > SUMMARY_LENGTH:
+      summary = summary[:SUMMARY_LENGTH-3] + "..."
+    asset.setdefault('summary', summary) 
 
 def index():
   global assets_index
