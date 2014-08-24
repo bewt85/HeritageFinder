@@ -11,10 +11,11 @@ NB This project is not endorsed by HMRC in any way.
 
 ## TODO
 
-- Paginate the results
 - Get it onto Heroku
-- Improve search
 - Create a flask app / static site with the data
+- Improve search
+  - filter by type
+  - filter by region
+- Add geo search
 - Update the data with Lat / Long
 - Add a map
-- Add geo search

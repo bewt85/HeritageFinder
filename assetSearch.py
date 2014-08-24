@@ -13,7 +13,8 @@ import math
 assets = []
 assets_index = []
 
-asset_dowload_root = 'https://raw.githubusercontent.com/bewt85/HeritageFinder/master/'
+#asset_dowload_root = 'https://raw.githubusercontent.com/bewt85/HeritageFinder/master/'
+asset_dowload_root = 'http://localhost:9999/'
 asset_filenames = ['data/art_assets.json', 'data/art_collection_assets.json', 'data/LBC_assets.json']
 
 load_errors = []
