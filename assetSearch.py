@@ -13,8 +13,7 @@ import math
 assets = []
 assets_index = []
 
-asset_dowload_root = 'https://raw.githubusercontent.com/bewt85/HeritageFinder/master/'
-#asset_dowload_root = 'http://localhost:9999/'
+asset_dowload_root = os.environ.get('DOWNLOAD_ROOT', 'https://raw.githubusercontent.com/bewt85/HeritageFinder/master/')
 asset_filenames = ['data/art_assets.json', 'data/art_collection_assets.json', 'data/LBC_assets.json']
 
 load_errors = []
@@ -28,6 +27,8 @@ def load():
   global load_time
   assets = []
   load_errors = []
+  print "Loading data from %s" % asset_dowload_root
+  print "Set the DOWNLOAD_ROOT environment variable if you want data from somewhere else"
   for asset_filename in asset_filenames:
     try:
       response = requests.get(asset_dowload_root + asset_filename)
