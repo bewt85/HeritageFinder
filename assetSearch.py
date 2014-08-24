@@ -70,11 +70,16 @@ def createCategories():
   categoryAlphaPairs = lambda category: (category, re.sub(r'[^a-zA-Z]', '', category))
   categories = map(categoryAlphaPairs, categories)
 
-def filter_assets(search_terms):
+def search_filter_assets(search_terms):
   results = assets_index
   for term in search_terms:
     results = filter(lambda asset_string: term in asset_string[0], results)
   return [asset[1] for asset in results]
+
+def category_filter_results(results, requested_categories):
+  reformatCategory = lambda result: re.sub(r'[^a-zA-Z]', '', result.get('category', '').title())
+  inRequestedCategories = lambda result: reformatCategory(result) in requested_categories
+  return filter(inRequestedCategories, results)
 
 def paginate(results, query, page, results_per_page=20):
   number_of_pages = int(math.ceil(float(len(results))/results_per_page))
@@ -101,12 +106,14 @@ def paginate(results, query, page, results_per_page=20):
     'results_per_page': results_per_page, 
     'links': links}
 
-def search(query="", page=1):
+def search(query="", page=1, requested_categories=None):
   if query:
     search_terms = query.lower().split()
-    results=filter_assets(search_terms)
+    results=search_filter_assets(search_terms)
   else:
     results=assets
+  if requested_categories:
+    results = category_filter_results(results, requested_categories)
   return paginate(results, query, page)
 
 @app.get('/', name='root')
@@ -115,7 +122,7 @@ def root():
   page = int(request.GET.get('p', 1))
   requested_categories = request.GET.getall('cat')
   content_type = request.get_header('Accept', "")
-  response = search(query, page)  
+  response = search(query, page, requested_categories)  
   if content_type.lower() == "application/json":
     return response 
   else:
@@ -127,7 +134,7 @@ def results():
   page = int(request.GET.get('p', 1))
   requested_categories = request.GET.getall('cat')
   content_type = request.get_header('Accept', "")
-  response = search(query, page)  
+  response = search(query, page, requested_categories)  
   if content_type.lower() == "application/json":
     return response 
   else:
