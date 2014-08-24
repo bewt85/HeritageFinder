@@ -120,7 +120,7 @@ def search(query="", page=1, requested_categories=None):
 def root():
   query = request.GET.get('q', "")
   page = int(request.GET.get('p', 1))
-  requested_categories = request.GET.getall('cat')
+  requested_categories = request.GET.getall('cat[]')
   content_type = request.get_header('Accept', "")
   response = search(query, page, requested_categories)  
   if content_type.lower() == "application/json":
@@ -132,7 +132,7 @@ def root():
 def results():
   query = request.GET.get('q', "")
   page = int(request.GET.get('p', 1))
-  requested_categories = request.GET.getall('cat')
+  requested_categories = request.GET.getall('cat[]')
   content_type = request.get_header('Accept', "")
   response = search(query, page, requested_categories)  
   if content_type.lower() == "application/json":

@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="row">
-        <form class="form-horizontal" role="form" action="/" method="get">
+        <form id="searchForm" class="form-horizontal" role="form" action="/" method="get">
           <div class="col-md-6">
             <div class="input-group input-group-lg">
               <input class="form-control" placeholder="Search" id="query" name="q" type="text" value="{{query}}"/>
@@ -32,9 +32,9 @@
               <div class="checkbox">
                 <label for="{{categoryAlphaOnly}}">
                   % if categoryAlphaOnly in requested_categories:
-                  <input name="cat" id="{{categoryAlphaOnly}}" type="checkbox" value="{{categoryAlphaOnly}}" checked/>
+                  <input name="cat[]" id="{{categoryAlphaOnly}}" type="checkbox" value="{{categoryAlphaOnly}}" checked/>
                   % else:
-                  <input name="cat" id="{{categoryAlphaOnly}}" type="checkbox" value="{{categoryAlphaOnly}}"/>
+                  <input name="cat[]" id="{{categoryAlphaOnly}}" type="checkbox" value="{{categoryAlphaOnly}}"/>
                   % end
                   {{ category }}
                 </label>
@@ -53,9 +53,15 @@
     <script>
       $(document).ready(function () {
         $("#query").keyup(function() {
+          var categories = [];
+          $("#searchForm").find(":checkbox").each( function() { 
+            if (this.name == "cat[]" && this.checked == true) { 
+              categories.push(this.value); 
+            } 
+          });
           $.ajax({
             url: '/results',
-            data: {'q': $("#query").val()},
+            data: {'q': $("#query").val(), 'cat': categories},
             success: function(response) {
               $("#results").html(response);
             }
