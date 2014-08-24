@@ -37,16 +37,20 @@ def load():
       load_errors.append("Could not load '%s' from '%s'" % (asset_filename, asset_download_root))
   load_time = datetime.datetime.now().isoformat()
 
-  def addCategory(asset):
+  for asset in assets:
     asset.setdefault('category', asset['type'])
-    return asset
-
-  assets = map(addCategory, assets)
 
 def index():
   global assets_index
-  assetsMap = lambda asset: "{}||{}".format(asset.get('name', ''), asset.get('description', '')).lower()
-  assets_index = zip(map(assetsMap, assets), assets)
+  assets_index = []
+  for asset in assets:
+    search_index = "||".join([
+      asset.get('name', ''),
+      asset.get('description', ''),
+      asset.get('category', ''),
+      asset.get('location', '')
+    ]).lower()
+    assets_index.append((search_index, asset))
 
 def filter_assets(search_terms):
   results = assets_index
