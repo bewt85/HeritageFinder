@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="row">
-        <form action="/" method="get">
+        <form class="form-horizontal" role="form" action="/" method="get">
           <div class="col-md-6">
             <div class="input-group input-group-lg">
               <input class="form-control" placeholder="Search" id="query" name="q" type="text" value="{{query}}"/>
@@ -26,22 +26,20 @@
               </span>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <span class="checkbox">
-                <label for="artCheckbox">
-                  <input class="check_boxes" id="artCheckbox" type="checkbox">
-                  Include art
+          <div class="form-group">
+            <div class="col-md-offset-1 col-md-4">
+            % for category,categoryAlphaOnly in categories:
+              <div class="checkbox">
+                <label for="{{categoryAlphaOnly}}">
+                  % if categoryAlphaOnly in requested_categories:
+                  <input name="cat" id="{{categoryAlphaOnly}}" type="checkbox" value="{{categoryAlphaOnly}}" checked/>
+                  % else:
+                  <input name="cat" id="{{categoryAlphaOnly}}" type="checkbox" value="{{categoryAlphaOnly}}"/>
+                  % end
+                  {{ category }}
                 </label>
-                <span class="badge pull-right">100</span>
-              </span>
-              <span class="checkbox">
-                <label for="paintingCheckbox">
-                  <input class="check_boxes" id="paintingCheckbox" type="checkbox">
-                  Include paintings
-                </label>
-                <span class="badge pull-right">100</span>
-              </span>
+              </div>
+            % end
             </div>
           </div>
         </form>

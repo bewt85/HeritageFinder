@@ -9,9 +9,11 @@ import os
 import requests
 import datetime
 import math
+import re
 
 assets = []
 assets_index = []
+categories = []
 
 asset_dowload_root = os.environ.get('DOWNLOAD_ROOT', 'https://raw.githubusercontent.com/bewt85/HeritageFinder/master/')
 asset_filenames = ['data/art_assets.json', 'data/art_collection_assets.json', 'data/LBC_assets.json']
@@ -58,6 +60,16 @@ def index():
     ]).lower()
     assets_index.append((search_index, asset))
 
+def createCategories():
+  global categories
+  getCategory = lambda asset: asset.get('category', '').title()
+  categories = map(getCategory, assets)
+  deduplicate = lambda l: list(set(l))
+  categories = deduplicate(categories)
+  categories = sorted(categories)
+  categoryAlphaPairs = lambda category: (category, re.sub(r'[^a-zA-Z]', '', category))
+  categories = map(categoryAlphaPairs, categories)
+
 def filter_assets(search_terms):
   results = assets_index
   for term in search_terms:
@@ -101,17 +113,19 @@ def search(query="", page=1):
 def root():
   query = request.GET.get('q', "")
   page = int(request.GET.get('p', 1))
+  requested_categories = request.GET.getall('cat')
   content_type = request.get_header('Accept', "")
   response = search(query, page)  
   if content_type.lower() == "application/json":
     return response 
   else:
-    return template('index', **response) 
+    return template('index', categories=categories, requested_categories=requested_categories, **response) 
 
 @app.get("/results")
 def results():
   query = request.GET.get('q', "")
   page = int(request.GET.get('p', 1))
+  requested_categories = request.GET.getall('cat')
   content_type = request.get_header('Accept', "")
   response = search(query, page)  
   if content_type.lower() == "application/json":
@@ -127,4 +141,5 @@ def status():
 if __name__ == '__main__':
   load()
   index()
+  createCategories()
   run(server='gevent', host="0.0.0.0", port=int(os.environ.get("PORT", 8080)), debug=True)
