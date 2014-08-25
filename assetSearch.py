@@ -81,7 +81,15 @@ def category_filter_results(results, requested_categories):
   inRequestedCategories = lambda result: reformatCategory(result) in requested_categories
   return filter(inRequestedCategories, results)
 
-def paginate(results, query, page, results_per_page=20):
+def categorize_results(results):
+  getCategory = lambda asset: asset.get('category', '').title()
+  counts = [] 
+  results_categories = map(getCategory, results)
+  for category,categoryAlpha in categories:
+    counts.append((category, categoryAlpha, results_categories.count(category)))
+  return counts
+
+def paginate(results, query, requested_categories, page, results_per_page=20):
   number_of_pages = int(math.ceil(float(len(results))/results_per_page))
   
   pageInRange = lambda p: p >= 1 and p <= number_of_pages
@@ -96,25 +104,24 @@ def paginate(results, query, page, results_per_page=20):
   page_start = results_per_page * (page - 1)
   these_results = results[page_start:(page_start+results_per_page)]
   count = len(results)
-  
+
   return {
-    'count': count, 
+    'count': count,
     'query': query, 
+    'requested_categories': requested_categories,
     'results': these_results, 
     'page': page, 
     'number_of_pages': number_of_pages, 
     'results_per_page': results_per_page, 
     'links': links}
 
-def search(query="", page=1, requested_categories=None):
+def search(query=""):
   if query:
     search_terms = query.lower().split()
     results=search_filter_assets(search_terms)
   else:
     results=assets
-  if requested_categories:
-    results = category_filter_results(results, requested_categories)
-  return paginate(results, query, page)
+  return results 
 
 @app.get('/', name='root')
 def root():
@@ -122,11 +129,15 @@ def root():
   page = int(request.GET.get('p', 1))
   requested_categories = request.GET.getall('cat[]')
   content_type = request.get_header('Accept', "")
-  response = search(query, page, requested_categories)  
+  results = search(query)  
+  category_count = categorize_results(results)
+  if requested_categories:
+    results = category_filter_results(results, requested_categories)
+  response = paginate(results, query, requested_categories, page)  
   if content_type.lower() == "application/json":
     return response 
   else:
-    return template('index', categories=categories, requested_categories=requested_categories, **response) 
+    return template('index', category_count=category_count, **response) 
 
 @app.get("/results")
 def results():
@@ -134,7 +145,10 @@ def results():
   page = int(request.GET.get('p', 1))
   requested_categories = request.GET.getall('cat[]')
   content_type = request.get_header('Accept', "")
-  response = search(query, page, requested_categories)  
+  results = search(query)  
+  if requested_categories:
+    results = category_filter_results(results, requested_categories)
+  response = paginate(results, query, requested_categories, page)  
   if content_type.lower() == "application/json":
     return response 
   else:
