@@ -26,7 +26,9 @@
               </span>
             </div>
           </div>
+          <div id="categories">
           % include('categories', category_count=category_count)
+          </div>
         </form>
       </div>
       <div class="row">
@@ -45,10 +47,11 @@
             } 
           });
           $.ajax({
-            url: '/results',
+            url: '/update',
             data: {'q': $("#query").val(), 'cat': categories},
             success: function(response) {
-              $("#results").html(response);
+              $("#results").html($(response).find("#resultsTable"));
+              $("#categories").html($(response).find("#categoriesList"));
             }
           });
         };

@@ -1,4 +1,4 @@
-          <div class="form-group">
+          <div id="categoriesList" class="form-group">
             <div class="col-md-3">
             % for category,categoryAlphaOnly,count in category_count[:len(category_count)/2]:
               <div class="checkbox">

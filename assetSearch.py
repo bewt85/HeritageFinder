@@ -139,20 +139,18 @@ def root():
   else:
     return template('index', category_count=category_count, **response) 
 
-@app.get("/results")
-def results():
+@app.get("/update")
+def update():
   query = request.GET.get('q', "")
   page = int(request.GET.get('p', 1))
   requested_categories = request.GET.getall('cat[]')
   content_type = request.get_header('Accept', "")
   results = search(query)  
+  category_count = categorize_results(results)
   if requested_categories:
     results = category_filter_results(results, requested_categories)
   response = paginate(results, query, requested_categories, page)  
-  if content_type.lower() == "application/json":
-    return response 
-  else:
-    return template('results', **response) 
+  return "<div>" + template('results', **response) + "<div></div>" + template('categories', category_count=category_count, **response) + "</div>"
 
 @app.get('/status')
 def status():
