@@ -16,8 +16,8 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <form id="searchForm" class="form-horizontal" role="form" action="/" method="get">
+      <form id="searchForm" class="form-horizontal" role="form" action="/" method="get">
+        <div class="row">
           <div class="col-md-6">
             <div class="input-group input-group-lg">
               <input class="form-control" placeholder="Search" id="query" name="q" type="text" value="{{query}}"/>
@@ -26,11 +26,12 @@
               </span>
             </div>
           </div>
-          <div id="categories">
-          % include('categories', category_count=category_count)
-          </div>
-        </form>
-      </div>
+        </div>
+        <br>
+        <div id="categories">
+        % include('categories', category_count=category_count)
+        </div>
+      </form>
       <div class="row">
         <div id="results" class="col-md-12">
         % include('results', count=count, results=results, links=links, number_of_pages=number_of_pages)
