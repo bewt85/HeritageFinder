@@ -51,7 +51,7 @@
             url: '/update',
             data: {'q': $("#query").val(), 'cat': categories},
             success: function(response) {
-              $("#results").html($(response).find("#resultsTable"));
+              $("#results").html($(response).find("#resultsAndPages"));
               $("#categories").html($(response).find("#categoriesList"));
             }
           });

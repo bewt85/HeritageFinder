@@ -10,6 +10,7 @@ import requests
 import datetime
 import math
 import re
+from urllib import urlencode
 
 assets = []
 assets_index = []
@@ -101,7 +102,15 @@ def paginate(results, query, requested_categories, page, results_per_page=20):
   pages_to_show = filter(pageInRange, pages_to_show)
   pages_to_show = sorted(list(set(pages_to_show)))
 
-  toLink = lambda p: (p, app.get_url('root', q=query, p=p))
+  def toLink(p):
+   if "All" in requested_categories:
+     parameters = [('q', query), ('p', p)]
+   else:
+     parameters = [('q', query), ('p', p)] + map(lambda cat: ('cat[]', cat), requested_categories)
+   url_encoded_parameters = urlencode(parameters)
+   base_link = app.get_url('root')
+   return (p, base_link + "?" + url_encoded_parameters if url_encoded_parameters else base_link)
+
   links = map(toLink, pages_to_show)
   
   page_start = results_per_page * (page - 1)
