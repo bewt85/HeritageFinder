@@ -27,8 +27,22 @@
             </div>
           </div>
           <div class="form-group">
-            <div class="col-md-offset-1 col-md-4">
-            % for category,categoryAlphaOnly in categories:
+            <div class="col-md-3">
+            % for category,categoryAlphaOnly in categories[:len(categories)/2]:
+              <div class="checkbox">
+                <label for="{{categoryAlphaOnly}}">
+                  % if categoryAlphaOnly in requested_categories:
+                  <input name="cat[]" id="{{categoryAlphaOnly}}" type="checkbox" value="{{categoryAlphaOnly}}" checked/>
+                  % else:
+                  <input name="cat[]" id="{{categoryAlphaOnly}}" type="checkbox" value="{{categoryAlphaOnly}}"/>
+                  % end
+                  {{ category }}
+                </label>
+              </div>
+            % end
+            </div>
+            <div class="col-md-3">
+            % for category,categoryAlphaOnly in categories[len(categories)/2:]:
               <div class="checkbox">
                 <label for="{{categoryAlphaOnly}}">
                   % if categoryAlphaOnly in requested_categories:
