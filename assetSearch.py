@@ -77,13 +77,16 @@ def search_filter_assets(search_terms):
   return [asset[1] for asset in results]
 
 def category_filter_results(results, requested_categories):
-  reformatCategory = lambda result: re.sub(r'[^a-zA-Z]', '', result.get('category', '').title())
-  inRequestedCategories = lambda result: reformatCategory(result) in requested_categories
-  return filter(inRequestedCategories, results)
+  if "All" in requested_categories:
+    return results
+  else:
+    reformatCategory = lambda result: re.sub(r'[^a-zA-Z]', '', result.get('category', '').title())
+    inRequestedCategories = lambda result: reformatCategory(result) in requested_categories
+    return filter(inRequestedCategories, results)
 
 def categorize_results(results):
   getCategory = lambda asset: asset.get('category', '').title()
-  counts = [] 
+  counts = [("All", "All", len(results))]
   results_categories = map(getCategory, results)
   for category,categoryAlpha in categories:
     counts.append((category, categoryAlpha, results_categories.count(category)))

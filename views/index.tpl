@@ -59,7 +59,13 @@
         $("#query").keyup(function() {
           updateResults()
         });
-        $("#searchForm").change(function() {
+        $("#categories").on('click', 'input:checkbox[value="All"]', function() {
+          $("#categories input:checkbox").prop('checked', this.checked);
+        });
+        $("#categories").on('click', 'input:checkbox', function() {
+          if (this.checked == false) {
+            $("#searchForm input:checkbox[value='All']")[0].checked = false;
+          }
           updateResults()
         });
       });
