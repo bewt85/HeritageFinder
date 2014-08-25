@@ -52,7 +52,7 @@
     </div>
     <script>
       $(document).ready(function () {
-        $("#query").keyup(function() {
+        function updateResults() {
           var categories = [];
           $("#searchForm").find(":checkbox").each( function() { 
             if (this.name == "cat[]" && this.checked == true) { 
@@ -66,6 +66,12 @@
               $("#results").html(response);
             }
           });
+        };
+        $("#query").keyup(function() {
+          updateResults()
+        });
+        $("#searchForm").change(function() {
+          updateResults()
         });
       });
     </script>
